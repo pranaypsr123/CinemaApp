@@ -1,0 +1,36 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', 
+                url: 'https://github.com/your-username/your-static-website.git'
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                sh '''
+                    echo "Deploying static website"
+                    sudo cp -r * /var/www/html/
+                    sudo chown -R apache:apache /var/www/html/
+                    sudo chmod -R 755 /var/www/html/
+                    echo "Deployment completed successfully"
+                '''
+            }
+        }
+    }
+    
+    post {
+        always {
+            cleanWs()
+        }
+        success {
+            echo "Website deployed successfully!"
+        }
+        failure {
+            echo "Deployment failed!"
+        }
+    }
+}
