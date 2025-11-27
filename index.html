@@ -1,13 +1,747 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Telugu Cinema World</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telugu Cinema World - Complete Telugu Movie Database</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, #ff9933, #138808);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            font-size: 28px;
+            margin-left: 10px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 20px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        
+        nav ul li a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Search Bar */
+        .search-bar {
+            margin: 20px 0;
+            display: flex;
+        }
+        
+        .search-bar input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            font-size: 16px;
+        }
+        
+        .search-bar button {
+            background: #138808;
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        
+        .search-bar button:hover {
+            background: #0f7006;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1489599809519-d5c40d4a3e78?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+            height: 400px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .hero-content {
+            text-align: center;
+            color: white;
+            max-width: 800px;
+            padding: 20px;
+        }
+        
+        .hero-content h2 {
+            font-size: 36px;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .hero-content p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #ff9933;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #e68a00;
+        }
+        
+        /* Section Styles */
+        section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ff9933;
+            color: #138808;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .view-all {
+            font-size: 14px;
+            color: #138808;
+            text-decoration: none;
+        }
+        
+        /* Movie Grid */
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .movie-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .movie-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .movie-poster {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+        }
+        
+        .movie-info {
+            padding: 15px;
+        }
+        
+        .movie-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .movie-year {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .movie-rating {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+            color: #ff9933;
+        }
+        
+        /* Cast Section */
+        .cast-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 15px;
+            padding: 10px 0;
+        }
+        
+        .cast-card {
+            min-width: 150px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .cast-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .cast-photo {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        .cast-info {
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .cast-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .cast-role {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        /* News Section */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .news-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .news-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        .news-content {
+            padding: 15px;
+        }
+        
+        .news-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .news-date {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        /* Footer */
+        footer {
+            background: #333;
+            color: white;
+            padding: 30px 0;
+            margin-top: 40px;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 20px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 15px;
+            color: #ff9933;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-section ul li a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-section ul li a:hover {
+            color: #ff9933;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .social-icons a {
+            color: white;
+            font-size: 20px;
+            transition: color 0.3s;
+        }
+        
+        .social-icons a:hover {
+            color: #ff9933;
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #555;
+            color: #aaa;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 15px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            nav ul li {
+                margin: 5px 10px;
+            }
+            
+            .hero {
+                height: 300px;
+            }
+            
+            .hero-content h2 {
+                font-size: 28px;
+            }
+            
+            .movie-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-film fa-2x"></i>
+                <h1>Telugu Cinema World</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#"><i class="fas fa-video"></i> Movies</a></li>
+                    <li><a href="#"><i class="fas fa-users"></i> Actors</a></li>
+                    <li><a href="#"><i class="fas fa-newspaper"></i> News</a></li>
+                    <li><a href="#"><i class="fas fa-images"></i> Gallery</a></li>
+                    <li><a href="#"><i class="fas fa-envelope"></i> Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <input type="text" placeholder="Search for movies, actors, directors...">
+            <button><i class="fas fa-search"></i> Search</button>
+        </div>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h2>Welcome to Telugu Cinema World</h2>
+                <p>Your complete guide to Telugu movies, actors, and cinema news all in one place</p>
+                <a href="#" class="btn">Explore Now</a>
+            </div>
+        </section>
+
+        <!-- Latest Movies Section -->
+        <section>
+            <h2 class="section-title">
+                Latest Movies
+                <a href="#" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
+            </h2>
+            <div class="movie-grid">
+                <!-- Movie 1 -->
+                <div class="movie-card">
+                    <img src="https://via.placeholder.com/300x400/ff9933/ffffff?text=Pushpa+2" alt="Pushpa 2" class="movie-poster">
+                    <div class="movie-info">
+                        <h3 class="movie-title">Pushpa 2: The Rule</h3>
+                        <p class="movie-year">2023 • Action, Thriller</p>
+                        <div class="movie-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span>4.5/5</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Movie 2 -->
+                <div class="movie-card">
+                    <img src="https://via.placeholder.com/300x400/138808/ffffff?text=Salaar" alt="Salaar" class="movie-poster">
+                    <div class="movie-info">
+                        <h3 class="movie-title">Salaar: Part 1 - Ceasefire</h3>
+                        <p class="movie-year">2023 • Action, Drama</p>
+                        <div class="movie-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <span>4.0/5</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Movie 3 -->
+                <div class="movie-card">
+                    <img src="https://via.placeholder.com/300x400/ff3333/ffffff?text=Guntur+Kaaram" alt="Guntur Kaaram" class="movie-poster">
+                    <div class="movie-info">
+                        <h3 class="movie-title">Guntur Kaaram</h3>
+                        <p class="movie-year">2024 • Action, Drama</p>
+                        <div class="movie-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <span>4.8/5</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Movie 4 -->
+                <div class="movie-card">
+                    <img src="https://via.placeholder.com/300x400/3333ff/ffffff?text=HanuMan" alt="HanuMan" class="movie-poster">
+                    <div class="movie-info">
+                        <h3 class="movie-title">HanuMan</h3>
+                        <p class="movie-year">2024 • Superhero, Action</p>
+                        <div class="movie-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span>4.6/5</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Popular Actors Section -->
+        <section>
+            <h2 class="section-title">
+                Popular Actors
+                <a href="#" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
+            </h2>
+            <div class="cast-container">
+                <!-- Actor 1 -->
+                <div class="cast-card">
+                    <img src="https://via.placeholder.com/200x250/cccccc/333333?text=Prabhas" alt="Prabhas" class="cast-photo">
+                    <div class="cast-info">
+                        <h4 class="cast-name">Prabhas</h4>
+                        <p class="cast-role">Actor</p>
+                    </div>
+                </div>
+                
+                <!-- Actor 2 -->
+                <div class="cast-card">
+                    <img src="https://via.placeholder.com/200x250/cccccc/333333?text=Allu+Arjun" alt="Allu Arjun" class="cast-photo">
+                    <div class="cast-info">
+                        <h4 class="cast-name">Allu Arjun</h4>
+                        <p class="cast-role">Actor</p>
+                    </div>
+                </div>
+                
+                <!-- Actor 3 -->
+                <div class="cast-card">
+                    <img src="https://via.placeholder.com/200x250/cccccc/333333?text=Ram+Charan" alt="Ram Charan" class="cast-photo">
+                    <div class="cast-info">
+                        <h4 class="cast-name">Ram Charan</h4>
+                        <p class="cast-role">Actor</p>
+                    </div>
+                </div>
+                
+                <!-- Actor 4 -->
+                <div class="cast-card">
+                    <img src="https://via.placeholder.com/200x250/cccccc/333333?text=Vijay+Devarakonda" alt="Vijay Devarakonda" class="cast-photo">
+                    <div class="cast-info">
+                        <h4 class="cast-name">Vijay Devarakonda</h4>
+                        <p class="cast-role">Actor</p>
+                    </div>
+                </div>
+                
+                <!-- Actor 5 -->
+                <div class="cast-card">
+                    <img src="https://via.placeholder.com/200x250/cccccc/333333?text=Jr+NTR" alt="Jr NTR" class="cast-photo">
+                    <div class="cast-info">
+                        <h4 class="cast-name">Jr NTR</h4>
+                        <p class="cast-role">Actor</p>
+                    </div>
+                </div>
+                
+                <!-- Actor 6 -->
+                <div class="cast-card">
+                    <img src="https://via.placeholder.com/200x250/cccccc/333333?text=Mahesh+Babu" alt="Mahesh Babu" class="cast-photo">
+                    <div class="cast-info">
+                        <h4 class="cast-name">Mahesh Babu</h4>
+                        <p class="cast-role">Actor</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Latest News Section -->
+        <section>
+            <h2 class="section-title">
+                Latest News
+                <a href="#" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
+            </h2>
+            <div class="news-grid">
+                <!-- News 1 -->
+                <div class="news-card">
+                    <img src="https://via.placeholder.com/400x200/ff9933/ffffff?text=Pushpa+2+News" alt="Pushpa 2 News" class="news-image">
+                    <div class="news-content">
+                        <div class="news-date">June 15, 2023</div>
+                        <h3 class="news-title">Pushpa 2 Release Date Announced</h3>
+                        <p>The much-awaited sequel to Pushpa: The Rise will hit theaters on December 25, 2023.</p>
+                    </div>
+                </div>
+                
+                <!-- News 2 -->
+                <div class="news-card">
+                    <img src="https://via.placeholder.com/400x200/138808/ffffff?text=Salaar+Update" alt="Salaar Update" class="news-image">
+                    <div class="news-content">
+                        <div class="news-date">June 10, 2023</div>
+                        <h3 class="news-title">Salaar Teaser Breaks Records</h3>
+                        <p>The teaser of Prabhas-starrer Salaar has garnered 50 million views in 24 hours.</p>
+                    </div>
+                </div>
+                
+                <!-- News 3 -->
+                <div class="news-card">
+                    <img src="https://via.placeholder.com/400x200/3333ff/ffffff?text=Award+News" alt="Award News" class="news-image">
+                    <div class="news-content">
+                        <div class="news-date">June 5, 2023</div>
+                        <h3 class="news-title">RRR Wins International Awards</h3>
+                        <p>SS Rajamouli's RRR continues its award-winning streak with two more international honors.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Upcoming Movies Section -->
+        <section>
+            <h2 class="section-title">
+                Upcoming Movies
+                <a href="#" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
+            </h2>
+            <div class="movie-grid">
+                <!-- Movie 1 -->
+                <div class="movie-card">
+                    <img src="https://via.placeholder.com/300x400/9933ff/ffffff?text=Devara+Part+1" alt="Devara Part 1" class="movie-poster">
+                    <div class="movie-info">
+                        <h3 class="movie-title">Devara: Part 1</h3>
+                        <p class="movie-year">2024 • Action, Drama</p>
+                    </div>
+                </div>
+                
+                <!-- Movie 2 -->
+                <div class="movie-card">
+                    <img src="https://via.placeholder.com/300x400/33cc33/ffffff?text=Game+Changer" alt="Game Changer" class="movie-poster">
+                    <div class="movie-info">
+                        <h3 class="movie-title">Game Changer</h3>
+                        <p class="movie-year">2024 • Political, Drama</p>
+                    </div>
+                </div>
+                
+                <!-- Movie 3 -->
+                <div class="movie-card">
+                    <img src="https://via.placeholder.com/300x400/ff6666/ffffff?text=Kalki+2898AD" alt="Kalki 2898 AD" class="movie-poster">
+                    <div class="movie-info">
+                        <h3 class="movie-title">Kalki 2898 AD</h3>
+                        <p class="movie-year">2024 • Sci-Fi, Action</p>
+                    </div>
+                </div>
+                
+                <!-- Movie 4 -->
+                <div class="movie-card">
+                    <img src="https://via.placeholder.com/300x400/66ccff/ffffff?text=RC+16" alt="RC 16" class="movie-poster">
+                    <div class="movie-info">
+                        <h3 class="movie-title">RC 16</h3>
+                        <p class="movie-year">2024 • Action, Drama</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-section">
+                <h3>Telugu Cinema World</h3>
+                <p>Your ultimate destination for everything related to Telugu cinema. From latest movie updates to actor profiles and industry news.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Movies</a></li>
+                    <li><a href="#">Actors</a></li>
+                    <li><a href="#">News</a></li>
+                    <li><a href="#">Gallery</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Categories</h3>
+                <ul>
+                    <li><a href="#">Latest Releases</a></li>
+                    <li><a href="#">Upcoming Movies</a></li>
+                    <li><a href="#">Box Office</a></li>
+                    <li><a href="#">Movie Reviews</a></li>
+                    <li><a href="#">Interviews</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> info@telugucinema.com</li>
+                    <li><i class="fas fa-phone"></i> +91 9876543210</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Hyderabad, Telangana</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2023 Telugu Cinema World. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Simple search functionality
+        document.querySelector('.search-bar button').addEventListener('click', function() {
+            const searchTerm = document.querySelector('.search-bar input').value;
+            if (searchTerm.trim() !== '') {
+                alert('Searching for: ' + searchTerm);
+                // In a real application, this would redirect to search results
+            }
+        });
+        
+        // Allow Enter key to trigger search
+        document.querySelector('.search-bar input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.querySelector('.search-bar button').click();
+            }
+        });
+        
+        // Add hover effects to movie cards
+        const movieCards = document.querySelectorAll('.movie-card');
+        movieCards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.2)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.boxShadow = '0 3px 10px rgba(0, 0, 0, 0.1)';
+            });
+        });
+    </script>
+</body>
 </html>
